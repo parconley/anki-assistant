@@ -57,18 +57,13 @@ jobs:
         pyinstaller --onefile --windowed --name anki-assistant${{ matrix.executable-suffix }} ${{ matrix.python-file }}
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact-name }}
         path: dist/anki-assistant${{ matrix.executable-suffix }}
 
     - name: Upload to release
       if: github.event_name == 'release'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: dist/anki-assistant${{ matrix.executable-suffix }}
-        asset_name: anki-assistant-${{ matrix.os }}${{ matrix.executable-suffix }}
-        asset_content_type: application/octet-stream
+        files: dist/anki-assistant${{ matrix.executable-suffix }}
